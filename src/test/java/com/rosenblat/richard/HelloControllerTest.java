@@ -1,9 +1,9 @@
 package com.rosenblat.richard;
 
-import org.junit.Test;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringApplicationConfiguration(classes = App.class)
+@SpringBootTest
 public class HelloControllerTest {
 
     @Test

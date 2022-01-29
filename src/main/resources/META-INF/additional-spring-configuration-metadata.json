@@ -1,0 +1,17 @@
+{"properties": [
+  {
+    "name": "IMDB.url",
+    "type": "java.lang.String",
+    "description": "url for IMDB API"
+  },
+  {
+    "name": "IMDB.key",
+    "type": "java.lang.String",
+    "description": "key for IMDB API"
+  },
+  {
+    "name": "IMDB.host",
+    "type": "java.lang.String",
+    "description": "host for IMDB API"
+  }
+]}

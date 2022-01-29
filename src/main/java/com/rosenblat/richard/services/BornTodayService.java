@@ -13,8 +13,11 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rosenblat.richard.util.ResponseUtil;
 
-// import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -24,11 +27,16 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @NoArgsConstructor
 @Slf4j
+@PropertySource("applicationSecret.properties")
 public class BornTodayService {
-    // @Value("${URL.IMDB}")
-    private String imdbURL = "https://imdb8.p.rapidapi.com";
-    private String xRapidapiHost = "imdb8.p.rapidapi.com";
-    private String xRapidapiKey = "30f6e8c89bmshfd852ed772e1957p1ac444jsn75196f85f3e0";
+    @Value("${IMDB.url}")
+    private String imdbURL;
+
+    @Value("${IMDB.host}")
+    private String xRapidapiHost;
+
+    @Value("${IMDB.api}")
+    private String xRapidapiKey;
 
     public List<String> getBornByDate(LocalDate date) {
         Integer day = date.getDayOfMonth();
@@ -39,13 +47,27 @@ public class BornTodayService {
         HttpRequest request = getIMDBRequest(day, month);
 
         log.info("request created, sending request");
-        HttpResponse<String> response = sendRequest(request);
+        HttpResponse<String> response;
+        try {
+            response = sendRequest(request);
+        } catch (IOException | InterruptedException e) {
+            log.error("Error while sending request", e);
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error while sending request",e);
+        }
 
         log.info("request sent, checking response");
         checkResponse(response);
 
         log.info("response valid, mapping response");
-        List<String> matchingBirthdays = mapResponse(response);
+        List<String> matchingBirthdays;
+        try {
+            matchingBirthdays = mapResponse(response);
+        } catch (IOException e) {
+            log.error("Error while mapping request", e);
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error while mapping request",e);
+        }
 
         return matchingBirthdays;
     }
@@ -58,12 +80,16 @@ public class BornTodayService {
         return matchingBirthdays;
     }
 
-    private void checkResponse(HttpResponse<String> response) throws Exception {
-        if (response == null || !ResponseUtil.isResponseStatus(response, 200)) {
-            log.info("response status invalid, throwing exception");
-            throw new Exception("Invalid Response");
-            // TODO throw custom exception
+    private void checkResponse(HttpResponse<String> response) {
+        if (response == null) {
+            log.info("response equals to null, throwing exception");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "External API returned Null");
         }
+        if (!ResponseUtil.isResponseStatus(response, 200)) {
+            log.info("response status invalid, throwing exception");
+            throw new ResponseStatusException(HttpStatus.valueOf(response.statusCode()), response.body());
+        }
+        
     }
 
     private HttpRequest getIMDBRequest(Integer day, Integer month) {
