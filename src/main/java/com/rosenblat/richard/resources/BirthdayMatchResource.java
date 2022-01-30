@@ -29,6 +29,6 @@ public class BirthdayMatchResource {
     List<String> bornToday(@RequestParam int day,@RequestParam int month) {
         log.info("Request recieved, checking born actors of day {}/{}", day,month);
         LocalDate date = LocalDate.of(2020, month, day);
-        return service.getBornByDate(date).getMatches();
+        return service.getBornByDate(date);
     }
 }

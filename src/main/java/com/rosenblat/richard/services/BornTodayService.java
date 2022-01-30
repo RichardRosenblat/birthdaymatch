@@ -6,11 +6,10 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
-import java.util.function.Supplier;
+import java.util.Arrays;
+import java.util.List;
 
 import com.rosenblat.richard.config.ConfigProperties;
-import com.rosenblat.richard.dto.birthdayMatch.imdb.ImdbBirthdayMatchResponse;
-import com.rosenblat.richard.util.JsonBodyHandler;
 import com.rosenblat.richard.util.ResponseUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,18 +30,15 @@ public class BornTodayService {
     @Autowired
     ConfigProperties config;
 
-    public ImdbBirthdayMatchResponse getBornByDate(LocalDate date) {
+    public List<String> getBornByDate(LocalDate date) {
 
-        Integer day = date.getDayOfMonth();
-        Integer month = date.getMonthValue();
-        
-        log.info("BornTodayService.getBornByDate(date) called, getting actors born in {} / {}", day, month);
+        log.info("getBornByDate called, getting actors born in {} / {}", date.getDayOfMonth(), date.getMonthValue());
 
         log.info("Initializing request to {}", config.getUrl());
-        HttpRequest request = getIMDBRequest(day, month);
+        HttpRequest request = getBornTodayRequest(date);
 
-        log.info("request created, sending request");
-        ImdbBirthdayMatchResponse response;
+        log.info("Request created, sending request");
+        String response;
         try {
             response = getCheckedResponse(request);
         } catch (IOException | InterruptedException e) {
@@ -51,16 +47,21 @@ public class BornTodayService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error while sending request", e);
         }
 
-        return response;
-
+        log.info("Response valid, mapping response");
+        List<String> mappedResponse = getMappedResponse(response);
+        
+        log.info("Mapping successful, returning mapped response");
+        return mappedResponse;
     }
 
-    private HttpRequest getIMDBRequest(Integer day, Integer month) {
-        String uri = config.getUrl() + "/actors/list-born-today?month=" + month + "&day=" + day;
+    private HttpRequest getBornTodayRequest(LocalDate date) {
+        Integer day = date.getDayOfMonth();
+        Integer month = date.getMonthValue();
+
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(uri))
+                .uri(URI.create(config.getUrl() + "/actors/list-born-today?month=" + month + "&day=" + day))
                 .header("x-rapidapi-host", config.getHost())
-                .header("x-rapidapi-key", config.getUrl())
+                .header("x-rapidapi-key", config.getKey())
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
 
@@ -68,37 +69,25 @@ public class BornTodayService {
 
     }
 
-    private ImdbBirthdayMatchResponse getCheckedResponse(HttpRequest request) throws IOException, InterruptedException {
+    private String getCheckedResponse(HttpRequest request) throws IOException, InterruptedException {
 
-        HttpResponse<Supplier<ImdbBirthdayMatchResponse>> response = sendRequest(request);
-
-        checkResponse(response);
-
-        return response.body().get();
-
+        HttpResponse<String> response = sendRequest(request);
+        ResponseUtil.checkResponseOk(response);
+        return response.body();
     }
 
-    private HttpResponse<Supplier<ImdbBirthdayMatchResponse>> sendRequest(HttpRequest request)
-            throws IOException, InterruptedException {
-
-        HttpResponse<Supplier<ImdbBirthdayMatchResponse>> response = HttpClient.newHttpClient()
-                .send(request, new JsonBodyHandler<>(ImdbBirthdayMatchResponse.class));
-
+    private HttpResponse<String> sendRequest(HttpRequest request) throws IOException, InterruptedException {
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
         return response;
-
     }
 
-    private void checkResponse(HttpResponse<?> response) {
+    private List<String> getMappedResponse(String response) {
+        response = formatString(response);
+        return Arrays.asList(response.split(","));
+    }
 
-        if (response == null) {
-            log.info("response equals to null, throwing exception");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "External API returned Null");
-        }
-
-        if (!ResponseUtil.isResponseStatus(response, 200)) {
-            log.info("response status invalid, throwing exception");
-            throw new ResponseStatusException(HttpStatus.valueOf(response.statusCode()), "External API returned Error");
-        }
-
+    private String formatString(String response) {
+        return response.replaceAll("[\\[\\]\"]", "");         
     }
 }
