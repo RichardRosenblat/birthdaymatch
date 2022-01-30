@@ -2,6 +2,8 @@ package com.rosenblat.richard.dto.imdb;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +18,7 @@ public class GetBioResponse {
    private String realName;
    private String legacyNameText;
    private String gender;
+   @JsonProperty("@type")
    private String type;
    private String disambiguation;
    private String name;
