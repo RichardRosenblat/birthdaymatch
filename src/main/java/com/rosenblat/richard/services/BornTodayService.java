@@ -6,15 +6,14 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.function.Supplier;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rosenblat.richard.config.ConfigProperties;
+import com.rosenblat.richard.dto.birthdayMatch.imdb.ImdbBirthdayMatchResponse;
+import com.rosenblat.richard.util.JsonBodyHandler;
 import com.rosenblat.richard.util.ResponseUtil;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,86 +26,79 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @NoArgsConstructor
 @Slf4j
-@PropertySource("applicationSecret.properties")
 public class BornTodayService {
-    @Value("${IMDB.url}")
-    private String imdbURL;
 
-    @Value("${IMDB.host}")
-    private String xRapidapiHost;
+    @Autowired
+    ConfigProperties config;
 
-    @Value("${IMDB.api}")
-    private String xRapidapiKey;
+    public ImdbBirthdayMatchResponse getBornByDate(LocalDate date) {
 
-    public List<String> getBornByDate(LocalDate date) {
         Integer day = date.getDayOfMonth();
         Integer month = date.getMonthValue();
-        log.info("Getting actorns born in {} / {}", day, month);
+        
+        log.info("BornTodayService.getBornByDate(date) called, getting actors born in {} / {}", day, month);
 
-        log.info("Initializing request to {}", imdbURL);
+        log.info("Initializing request to {}", config.getUrl());
         HttpRequest request = getIMDBRequest(day, month);
 
         log.info("request created, sending request");
-        HttpResponse<String> response;
+        ImdbBirthdayMatchResponse response;
         try {
-            response = sendRequest(request);
+            response = getCheckedResponse(request);
         } catch (IOException | InterruptedException e) {
             log.error("Error while sending request", e);
             e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error while sending request",e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error while sending request", e);
         }
 
-        log.info("request sent, checking response");
+        return response;
+
+    }
+
+    private HttpRequest getIMDBRequest(Integer day, Integer month) {
+        String uri = config.getUrl() + "/actors/list-born-today?month=" + month + "&day=" + day;
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uri))
+                .header("x-rapidapi-host", config.getHost())
+                .header("x-rapidapi-key", config.getUrl())
+                .method("GET", HttpRequest.BodyPublishers.noBody())
+                .build();
+
+        return request;
+
+    }
+
+    private ImdbBirthdayMatchResponse getCheckedResponse(HttpRequest request) throws IOException, InterruptedException {
+
+        HttpResponse<Supplier<ImdbBirthdayMatchResponse>> response = sendRequest(request);
+
         checkResponse(response);
 
-        log.info("response valid, mapping response");
-        List<String> matchingBirthdays;
-        try {
-            matchingBirthdays = mapResponse(response);
-        } catch (IOException e) {
-            log.error("Error while mapping request", e);
-            e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error while mapping request",e);
-        }
+        return response.body().get();
 
-        return matchingBirthdays;
     }
 
-    private List<String> mapResponse(HttpResponse<String> response)
-            throws IOException, JsonParseException, JsonMappingException {
-        List<String> matchingBirthdays;
-        ObjectMapper mapper = new ObjectMapper();
-        matchingBirthdays = mapper.readValue(response.body(), List.class);
-        return matchingBirthdays;
+    private HttpResponse<Supplier<ImdbBirthdayMatchResponse>> sendRequest(HttpRequest request)
+            throws IOException, InterruptedException {
+
+        HttpResponse<Supplier<ImdbBirthdayMatchResponse>> response = HttpClient.newHttpClient()
+                .send(request, new JsonBodyHandler<>(ImdbBirthdayMatchResponse.class));
+
+        return response;
+
     }
 
-    private void checkResponse(HttpResponse<String> response) {
+    private void checkResponse(HttpResponse<?> response) {
+
         if (response == null) {
             log.info("response equals to null, throwing exception");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "External API returned Null");
         }
+
         if (!ResponseUtil.isResponseStatus(response, 200)) {
             log.info("response status invalid, throwing exception");
-            throw new ResponseStatusException(HttpStatus.valueOf(response.statusCode()), response.body());
+            throw new ResponseStatusException(HttpStatus.valueOf(response.statusCode()), "External API returned Error");
         }
-        
-    }
 
-    private HttpRequest getIMDBRequest(Integer day, Integer month) {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(imdbURL + "/actors/list-born-today?month=" + month + "&day=" + day))
-                .header("x-rapidapi-host", xRapidapiHost)
-                .header("x-rapidapi-key", xRapidapiKey)
-                .method("GET", HttpRequest.BodyPublishers.noBody())
-                .build();
-        return request;
-    }
-
-    private HttpResponse<String> sendRequest(HttpRequest request) throws IOException, InterruptedException {
-        HttpResponse<String> response = null;
-
-        response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-
-        return response;
     }
 }
