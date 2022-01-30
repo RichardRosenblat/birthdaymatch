@@ -15,14 +15,14 @@ Match your birthday with any actor or actress
       - ~~study error of not finding properties~~
       - ~~fix mapping~~
       - ~~add test endpoint~~
-  - get bio from name
-    - add getBio service
-      - recieve code
-      - assemble request
-      - send request
-      - recieve response
-      - map response to proper object
-      - return mapped response
+  - ~~get bio from name~~
+    - ~~add getBio service~~
+      - ~~recieve code~~
+      - ~~assemble request~~
+      - ~~send request~~
+      - ~~recieve response~~
+      - ~~map response to proper object~~
+      - ~~return mapped response~~
   - add birthdaymatch BO
   - add birthdaymatch controller
 - create tests
