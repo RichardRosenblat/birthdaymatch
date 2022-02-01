@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.rosenblat.richard.bo.BirthdayMatchBO;
 import com.rosenblat.richard.dto.birthdaymatch.BirthdayMatchResponse;
-import com.rosenblat.richard.dto.imdb.GetBioResponse;
+import com.rosenblat.richard.dto.imdb.getBio.GetBioResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

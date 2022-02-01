@@ -1,11 +1,10 @@
 package com.rosenblat.richard.bo;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.rosenblat.richard.dto.birthdaymatch.BirthdayMatchResponse;
-import com.rosenblat.richard.dto.imdb.GetBioResponse;
+import com.rosenblat.richard.dto.imdb.getBio.GetBioResponse;
 import com.rosenblat.richard.services.BornTodayService;
 import com.rosenblat.richard.services.GetBioService;
 

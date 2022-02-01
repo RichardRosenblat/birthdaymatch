@@ -1,4 +1,4 @@
-package com.rosenblat.richard.dto.imdb;
+package com.rosenblat.richard.dto.imdb.getBio;
 
 import java.util.List;
 

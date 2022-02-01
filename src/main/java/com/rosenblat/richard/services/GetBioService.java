@@ -8,7 +8,7 @@ import java.net.http.HttpResponse;
 import java.util.function.Supplier;
 
 import com.rosenblat.richard.config.ConfigProperties;
-import com.rosenblat.richard.dto.imdb.GetBioResponse;
+import com.rosenblat.richard.dto.imdb.getBio.GetBioResponse;
 import com.rosenblat.richard.util.JsonBodyHandler;
 import com.rosenblat.richard.util.ResponseUtil;
 

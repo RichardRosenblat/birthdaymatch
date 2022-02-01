@@ -3,7 +3,7 @@ package com.rosenblat.richard.dto.birthdaymatch;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.rosenblat.richard.dto.imdb.GetBioResponse;
+import com.rosenblat.richard.dto.imdb.getBio.GetBioResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
