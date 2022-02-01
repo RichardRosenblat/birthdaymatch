@@ -60,9 +60,11 @@ public class GetBioResponse {
    @Data
    @NoArgsConstructor
    @AllArgsConstructor
+   @JsonIgnoreProperties(ignoreUnknown = true)
    public static class Spouses {
 
       private String fromDate;
+      private String toDate;
       private Boolean current;
       private String name;
       private String attributes;

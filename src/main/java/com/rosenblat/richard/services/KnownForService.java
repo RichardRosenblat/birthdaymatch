@@ -6,6 +6,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.concurrent.Future;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -18,6 +19,8 @@ import com.rosenblat.richard.util.ResponseUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -34,7 +37,8 @@ public class KnownForService {
     @Autowired
     ConfigProperties config;
 
-    public List<KnownForResponse> knownFor(String code) {
+    @Async
+    public Future<List<KnownForResponse>> knownFor(String code) {
         log.info("Getting known for for code: {}", code);
 
         log.info("Initializing request to {}", config.getUrl());
@@ -63,7 +67,7 @@ public class KnownForService {
         }
 
         log.info("Get Known for of code {} successful", code);
-        return mappedResponse.getKnownForResponse();
+        return new AsyncResult<List<KnownForResponse>>(mappedResponse.getKnownForResponse());
     }
 
     private KnownForResponseInitiator getMappedResponse(HttpResponse<String> response) throws JsonMappingException, JsonProcessingException {

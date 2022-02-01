@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import lombok.Setter;
 @PropertySource("classpath:applicationSecret.properties")
 @ConfigurationProperties(prefix = "imdb")
 @Primary
+@EnableAsync
 @ConstructorBinding
 public class ConfigProperties {
     

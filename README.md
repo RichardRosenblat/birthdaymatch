@@ -31,12 +31,13 @@ Match your birthday with any actor or actress
         - ~~call getBio service~~
         - ~~add response to a list~~
       - ~~create call loop limiter~~
-    - make async work
-      - remove call loop limiter
-  - add known for service
+    - ~~make async work~~
+      - ~~remove call loop limiter~~
+  - ~~add known for service~~
   - convert known for + get bio info in birthdayMatchResponse
     - create DTO converter
   - ~~add birthdaymatch controller~~
 - create tests
 
 - add other functinalities
+- add front end
