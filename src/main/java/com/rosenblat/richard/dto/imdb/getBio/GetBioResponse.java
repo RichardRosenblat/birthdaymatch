@@ -3,6 +3,8 @@ package com.rosenblat.richard.dto.imdb.getBio;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -13,6 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_NULL)
 public class GetBioResponse {
 
    private String name;
@@ -59,7 +62,7 @@ public class GetBioResponse {
    @AllArgsConstructor
    public static class Spouses {
 
-      private Integer fromDate;
+      private String fromDate;
       private Boolean current;
       private String name;
       private String attributes;

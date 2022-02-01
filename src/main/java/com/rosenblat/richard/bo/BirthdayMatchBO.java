@@ -5,8 +5,10 @@ import java.util.List;
 
 import com.rosenblat.richard.dto.birthdaymatch.BirthdayMatchResponse;
 import com.rosenblat.richard.dto.imdb.getBio.GetBioResponse;
+import com.rosenblat.richard.dto.imdb.knownFor.KnownForResponse;
 import com.rosenblat.richard.services.BornTodayService;
 import com.rosenblat.richard.services.GetBioService;
+import com.rosenblat.richard.services.KnownForService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,6 +24,9 @@ public class BirthdayMatchBO {
 
     @Autowired
     GetBioService getBioService;
+    
+    @Autowired
+    KnownForService knownForService;
 
     public BirthdayMatchResponse matchBirthday(int day, int month){
         log.info("BirthdayMatch Request recieved, matching born actors of day {}/{}", day, month);
@@ -59,5 +64,10 @@ public class BirthdayMatchBO {
     public GetBioResponse getBio(String code) {
         log.info("Request recieved, getting bio of actor belonging to the code: {}", code);
         return getBioService.getBio(code);
+    }
+
+    public List<KnownForResponse> getKnownFor(String code) {
+        log.info("Request recieved, getting bio of actor belonging to the code: {}", code);
+        return knownForService.knownFor(code);
     }
 }

@@ -51,7 +51,7 @@ public class BornTodayService {
         List<String> mappedResponse = getMappedResponse(response);
         
         log.info("Mapping successful, returning mapped response");
-        log.info("Get born today successful");
+        log.info("Get born today of day {} / {} successful", date.getDayOfMonth(), date.getMonthValue());
         return mappedResponse;
     }
 
