@@ -38,7 +38,7 @@ public class GetBioService {
 
         log.info("Request created, sending request");
         GetBioResponse response;
-
+        
         try {
             response = getCheckedResponse(request);
         } catch (IOException | InterruptedException e) {
@@ -46,7 +46,8 @@ public class GetBioService {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error while sending request", e);
         }
-
+        
+        log.info("Get bio successful, the code {} belongs to {}", code, response.getName());
         return response;
     }
 

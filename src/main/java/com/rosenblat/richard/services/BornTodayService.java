@@ -51,6 +51,7 @@ public class BornTodayService {
         List<String> mappedResponse = getMappedResponse(response);
         
         log.info("Mapping successful, returning mapped response");
+        log.info("Get born today successful");
         return mappedResponse;
     }
 
@@ -88,6 +89,7 @@ public class BornTodayService {
     }
 
     private String formatString(String response) {
-        return response.replaceAll("[\\[\\]\"]", "");         
+        response = response.replaceAll("[\\[\\]\\/\"]", "");         
+        return response.replaceAll("name", "");         
     }
 }
