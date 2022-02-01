@@ -24,7 +24,19 @@ Match your birthday with any actor or actress
       - ~~map response to proper object~~
       - ~~return mapped response~~
   - add birthdaymatch BO
-  - add birthdaymatch controller
+    - make it work without async
+      - ~~create date~~
+      - ~~call bornToday service~~
+      - ~~loop thought bornToday service response~~
+        - ~~call getBio service~~
+        - ~~add response to a list~~
+      - ~~create call loop limiter~~
+    - make async work
+      - remove call loop limiter
+  - add known for service
+  - convert known for + get bio info in birthdayMatchResponse
+    - create DTO converter
+  - ~~add birthdaymatch controller~~
 - create tests
 
 - add other functinalities
