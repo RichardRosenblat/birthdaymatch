@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import com.rosenblat.richard.dto.DtoConverter;
 import com.rosenblat.richard.dto.birthdaymatch.BirthdayMatchResponse;
 import com.rosenblat.richard.dto.imdb.getBio.GetBioResponse;
 import com.rosenblat.richard.dto.imdb.knownFor.KnownForResponse;
@@ -40,56 +41,75 @@ public class BirthdayMatchBO {
         log.info("Calling born today service");
         List<String> matches = bornTodayService.getBornByDate(date);
         
-        BirthdayMatchResponse response = new BirthdayMatchResponse();
         
+        BirthdayMatchResponse response = new BirthdayMatchResponse();
         log.info("Starting matches loop");
-        // int i = 0; 
-        for (String code : matches) {
-            // if (i>=10) break; 
-            
-            log.info("{}", code);
-            fillMatchesByCode(response, code);
-            log.info("");
-            // i++; 
-        }
+        FillResponse(matches, response);
+
         return response;
     }
 
+    private void FillResponse(List<String> matches, BirthdayMatchResponse response) {
+        int i = 0; 
+        for (String code : matches) {
+             if (i>=5) break; 
+            
+            log.info("{}", code);
+            addActorInfo(response, code);
+            log.info("");
+
+            i++; 
+        }
+    }
+
     @Async
-    public void fillMatchesByCode(BirthdayMatchResponse response, String code) {
-        log.info("Getting bio of match {}", code);
-        GetBioResponse match;
+    public void addActorInfo(BirthdayMatchResponse response, String code) {
+
+        GetBioResponse bio;
+        List<KnownForResponse> knownFor;
+        
         try {
-            match = getBioService.getBio(code).get();
+            bio = getBioService.getBio(code).get();
+            knownFor = knownForService.knownFor(code).get();
+
         } catch (InterruptedException | ExecutionException e) {
             log.error("Thread error while getting Bio", e);
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Thread error while getting Bio", e);
         }
-        response.addActor(match);
+
+        response.addActorInfo(DtoConverter.getActorInfo(bio, knownFor));
+
     }
 
     public List<String> bornToday(int day, int month) {
-        log.info("BornToday Request recieved, checking born actors of day {}/{}", day,month);
+
         LocalDate date = LocalDate.of(2020, month, day);
+
         return bornTodayService.getBornByDate(date);
+
     }
 
     public GetBioResponse getBio(String code) {
-        log.info("Request recieved, getting bio of actor belonging to the code: {}", code);
+
+
         try {
             return getBioService.getBio(code).get();
+
         } catch (InterruptedException | ExecutionException e) {
             log.error("Thread error while getting Bio", e);
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Thread error while getting Bio", e);
         }
+
     }
 
     public List<KnownForResponse> getKnownFor(String code) {
-        log.info("Request recieved, getting bio of actor belonging to the code: {}", code);
+
+
         try {
             return knownForService.knownFor(code).get();
+
         } catch (InterruptedException | ExecutionException e) {
             log.error("Thread error while getting known for", e);
             e.printStackTrace();

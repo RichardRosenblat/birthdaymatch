@@ -34,10 +34,8 @@ public class BornTodayService {
 
         log.info("getBornByDate called, getting actors born in {} / {}", date.getDayOfMonth(), date.getMonthValue());
 
-        log.info("Initializing request to {}", config.getUrl());
         HttpRequest request = getBornTodayRequest(date);
 
-        log.info("Request created, sending request");
         String response;
         try {
             response = getCheckedResponse(request);
@@ -47,10 +45,8 @@ public class BornTodayService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error while sending request", e);
         }
 
-        log.info("Response valid, mapping response");
         List<String> mappedResponse = getMappedResponse(response);
         
-        log.info("Mapping successful, returning mapped response");
         log.info("Get born today of day {} / {} successful", date.getDayOfMonth(), date.getMonthValue());
         return mappedResponse;
     }

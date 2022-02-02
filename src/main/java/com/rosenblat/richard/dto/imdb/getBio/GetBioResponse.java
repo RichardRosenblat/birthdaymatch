@@ -25,14 +25,14 @@ public class GetBioResponse {
    private String legacyNameText;
    private String gender;
    private String disambiguation;
-   private List<MiniBios> miniBios;
+   private List<MiniBio> miniBios;
    private String id;
    private List<String> nicknames;
    private String birthDate;
    private Double heightCentimeters;
    private List<String> trademarks;
    private List<String> akas;
-   private List<Spouses> spouses;
+   private List<Spouse> spouses;
    @JsonProperty("@type")
    private String type;
 
@@ -51,9 +51,10 @@ public class GetBioResponse {
    @NoArgsConstructor
    @AllArgsConstructor
    @JsonIgnoreProperties(ignoreUnknown = true)
-   public static class MiniBios {
+   public static class MiniBio {
       private String language;
       private String id;
+      private String author;
       private String text;
    }
 
@@ -61,7 +62,7 @@ public class GetBioResponse {
    @NoArgsConstructor
    @AllArgsConstructor
    @JsonIgnoreProperties(ignoreUnknown = true)
-   public static class Spouses {
+   public static class Spouse {
 
       private String fromDate;
       private String toDate;

@@ -7,7 +7,7 @@ Match your birthday with any actor or actress
 - ~~security update~~
   - ~~put applicationsSecrets in gitignore~~
   - ~~find how to get info from applicationsSecrets~~
-- add birthday match endpoint
+- ~~add birthday match endpoint~~
   - ~~match birthday to get code for actor~~
       - ~~create exception handler~~ 
         - ~~find out how to handle exception~~ 
@@ -23,8 +23,8 @@ Match your birthday with any actor or actress
       - ~~recieve response~~
       - ~~map response to proper object~~
       - ~~return mapped response~~
-  - add birthdaymatch BO
-    - make it work without async
+  - ~~add birthdaymatch BO~~
+    - ~~make it work without async~~
       - ~~create date~~
       - ~~call bornToday service~~
       - ~~loop thought bornToday service response~~
@@ -34,10 +34,9 @@ Match your birthday with any actor or actress
     - ~~make async work~~
       - ~~remove call loop limiter~~
   - ~~add known for service~~
-  - convert known for + get bio info in birthdayMatchResponse
-    - create DTO converter
+  - ~~convert known for + get bio info in birthdayMatchResponse~~
+    - ~~create DTO converter~~
   - ~~add birthdaymatch controller~~
 - create tests
-
-- add other functinalities
+- add swagger
 - add front end

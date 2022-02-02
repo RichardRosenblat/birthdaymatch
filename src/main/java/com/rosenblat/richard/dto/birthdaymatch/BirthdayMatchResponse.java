@@ -3,25 +3,22 @@ package com.rosenblat.richard.dto.birthdaymatch;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.rosenblat.richard.dto.imdb.getBio.GetBioResponse;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(Include.NON_NULL)
 public class BirthdayMatchResponse { 
 
-   List<GetBioResponse> matches = new ArrayList<>();
-   
-   public boolean addActor(GetBioResponse match){
-      return matches.add(match);
-   };
+   private List<ActorInfo> matches = new ArrayList<>();
 
-   public boolean removeActor(GetBioResponse match){
-      return matches.remove(match);
-   };
 
+   public boolean addActorInfo(ActorInfo actorInfo) {
+      return matches.add(actorInfo);
+   }
 }
