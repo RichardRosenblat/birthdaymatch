@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
 public class KnownForResponse {
-    
+
     private Summary summary;
     private Double imdbRating;
     private List<String> categories;

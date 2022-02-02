@@ -46,7 +46,7 @@ public class BornTodayService {
         }
 
         List<String> mappedResponse = getMappedResponse(response);
-        
+
         log.info("Get born today of day {} / {} successful", date.getDayOfMonth(), date.getMonthValue());
         return mappedResponse;
     }
@@ -85,7 +85,7 @@ public class BornTodayService {
     }
 
     private String formatString(String response) {
-        response = response.replaceAll("[\\[\\]\\/\"]", "");         
-        return response.replaceAll("name", "");         
+        response = response.replaceAll("[\\[\\]\\/\"]", "");
+        return response.replaceAll("name", "");
     }
 }

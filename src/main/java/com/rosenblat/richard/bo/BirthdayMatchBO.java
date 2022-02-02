@@ -29,19 +29,18 @@ public class BirthdayMatchBO {
 
     @Autowired
     GetBioService getBioService;
-    
+
     @Autowired
     KnownForService knownForService;
 
-    public BirthdayMatchResponse matchBirthday(int day, int month){
+    public BirthdayMatchResponse matchBirthday(int day, int month) {
         log.info("BirthdayMatch Request recieved, matching born actors of day {}/{}", day, month);
-        
+
         LocalDate date = LocalDate.of(2020, month, day);
-        
+
         log.info("Calling born today service");
         List<String> matches = bornTodayService.getBornByDate(date);
-        
-        
+
         BirthdayMatchResponse response = new BirthdayMatchResponse();
         log.info("Starting matches loop");
         FillResponse(matches, response);
@@ -50,32 +49,35 @@ public class BirthdayMatchBO {
     }
 
     private void FillResponse(List<String> matches, BirthdayMatchResponse response) {
-        int i = 0; 
+        int i = 0;
         for (String code : matches) {
-             if (i>=5) break; 
-            
+            if (i >= 5)
+                break;
+
             log.info("{}", code);
             addActorInfo(response, code);
             log.info("");
 
-            i++; 
+            i++;
         }
     }
 
+    // This methot has the public access modifier only to allow the @Async
+    // annotattion to work
     @Async
     public void addActorInfo(BirthdayMatchResponse response, String code) {
 
         GetBioResponse bio;
         List<KnownForResponse> knownFor;
-        
+
         try {
             bio = getBioService.getBio(code).get();
             knownFor = knownForService.knownFor(code).get();
 
         } catch (InterruptedException | ExecutionException e) {
-            log.error("Thread error while getting Bio", e);
+            log.error("Thread error while getting info about actor", e);
             e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Thread error while getting Bio", e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Thread error while getting info about actor", e);
         }
 
         response.addActorInfo(DtoConverter.getActorInfo(bio, knownFor));
@@ -92,7 +94,6 @@ public class BirthdayMatchBO {
 
     public GetBioResponse getBio(String code) {
 
-
         try {
             return getBioService.getBio(code).get();
 
@@ -105,7 +106,6 @@ public class BirthdayMatchBO {
     }
 
     public List<KnownForResponse> getKnownFor(String code) {
-
 
         try {
             return knownForService.knownFor(code).get();

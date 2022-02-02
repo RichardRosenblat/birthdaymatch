@@ -26,7 +26,7 @@ public class BirthdayMatchResource {
         log.info("Request recieved, saying hello to {}", name);
         return "Hello " + name;
     }
-   
+
     @GetMapping("match")
     public BirthdayMatchResponse matchBirthday(@RequestParam int day, @RequestParam int month) {
         log.info("Request recieved, initializing matchBirthday of {}/{}", day, month);
@@ -38,7 +38,7 @@ public class BirthdayMatchResource {
         log.info("Request recieved, initializing bornToday of {}/{}", day, month);
         return bo.bornToday(day, month);
     }
-    
+
     @GetMapping("bio")
     public GetBioResponse getBio(@RequestParam String code) {
         log.info("Request recieved, initializing getBio of {}", code);

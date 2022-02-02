@@ -46,7 +46,7 @@ public class KnownForService {
 
         log.info("Request created, sending request");
         HttpResponse<String> response;
-        
+
         try {
             response = getCheckedResponse(request);
         } catch (IOException | InterruptedException e) {
@@ -54,7 +54,7 @@ public class KnownForService {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error while sending request", e);
         }
-        
+
         log.info("Response valid, mapping response");
         KnownForResponseInitiator mappedResponse;
 
@@ -70,11 +70,14 @@ public class KnownForService {
         return new AsyncResult<List<KnownForResponse>>(mappedResponse.getKnownForResponse());
     }
 
-    private KnownForResponseInitiator getMappedResponse(HttpResponse<String> response) throws JsonMappingException, JsonProcessingException {
+    private KnownForResponseInitiator getMappedResponse(HttpResponse<String> response)
+            throws JsonMappingException, JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();
         KnownForResponseInitiator mappedResponse = new KnownForResponseInitiator();
-        mappedResponse.setKnownForResponse(mapper.readValue(response.body(), new TypeReference<List<KnownForResponse>>(){}));
+        mappedResponse
+                .setKnownForResponse(mapper.readValue(response.body(), new TypeReference<List<KnownForResponse>>() {
+                }));
 
         return mappedResponse;
     }
@@ -83,7 +86,7 @@ public class KnownForService {
         HttpResponse<String> response = sendRequest(request);
 
         ResponseUtil.checkResponseOk(response);
-        
+
         log.info("Response valid, returning response");
         return response;
     }
@@ -92,7 +95,7 @@ public class KnownForService {
             throws IOException, InterruptedException {
 
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-        
+
         return response;
     }
 

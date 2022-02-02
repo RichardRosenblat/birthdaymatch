@@ -40,3 +40,4 @@ Match your birthday with any actor or actress
 - create tests
 - add swagger
 - add front end
+- update README

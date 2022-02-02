@@ -11,20 +11,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class JsonBodyHandler<W> implements HttpResponse.BodyHandler<Supplier<W>> {
 
     /*
-    * how to call this:
-    * HttpRequest request = HttpRequest.newBuilder(new
-    * URI("https://jsonplaceholder.typicode.com/todos/1"))
-    * .header("Accept", "application/json")
-    * .build();
-    *
-    * Model model = HttpClient.newHttpClient()
-    * .send(request, new JsonBodyHandler<>(Model.class))
-    * .body()
-    * .get();
-    *
-    * System.out.println(model);
-    *
-    */
+     * how to call this:
+     * HttpRequest request = HttpRequest.newBuilder(new
+     * URI("https://foo.com/bar/1"))
+     * .header("Accept", "application/json")
+     * .build();
+     *
+     * Model model = HttpClient.newHttpClient()
+     * .send(request, new JsonBodyHandler<>(Model.class))
+     * .body()
+     * .get();
+     *
+     * System.out.println(model);
+     *
+     */
 
     private final Class<W> wClass;
 

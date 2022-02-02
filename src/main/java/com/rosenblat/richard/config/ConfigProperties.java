@@ -19,7 +19,7 @@ import lombok.Setter;
 @EnableAsync
 @ConstructorBinding
 public class ConfigProperties {
-    
+
     private String url;
     private String host;
     private String key;

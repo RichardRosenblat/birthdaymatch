@@ -40,14 +40,14 @@ public class GetBioService {
         HttpRequest request = getGetBioRequest(code);
 
         GetBioResponse response;
-        
+
         try {
             response = getCheckedResponse(request);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error while sending request", e);
         }
-        
+
         log.info("Get bio successful, the code {} belongs to {}", code, response.getName());
         return new AsyncResult<GetBioResponse>(response);
     }
@@ -56,7 +56,7 @@ public class GetBioService {
         HttpResponse<Supplier<GetBioResponse>> response = sendRequest(request);
 
         ResponseUtil.checkResponseOk(response);
-        
+
         return response.body().get();
     }
 
