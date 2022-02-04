@@ -1,8 +1,11 @@
 package com.rosenblat.richard;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import com.rosenblat.richard.services.BornTodayService;
@@ -23,7 +26,16 @@ public class BornTodayServiceTest {
     @Test
     public void testGetBornByDate()
     {
-        assertDoesNotThrow(() -> service.getBornByDate(LocalDate.of(2020, 10, 17)));
+        assertDoesNotThrow(() -> service.getBornByDate(TestsConsts.DATE));
+    }
+
+    @Test
+    public void testGetBornByDateResponse()
+    {
+        List<String> response = service.getBornByDate(TestsConsts.DATE);
+        
+        assertNotNull(response);
+        assertNotEquals(new ArrayList<String>(), response);
     }
     
 

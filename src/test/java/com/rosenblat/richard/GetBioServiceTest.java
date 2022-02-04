@@ -1,8 +1,13 @@
 package com.rosenblat.richard;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.concurrent.ExecutionException;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+import com.rosenblat.richard.dto.imdb.getBio.GetBioResponse;
 import com.rosenblat.richard.services.GetBioService;
 
 import org.junit.jupiter.api.Test;
@@ -21,7 +26,18 @@ public class GetBioServiceTest {
     @Test
     public void testKnownFor()
     {
-        assertDoesNotThrow(() -> service.getBio("nm0001667"));
+        assertDoesNotThrow(() -> service.getBio(TestsConsts.CODE));
+    }
+
+    @Test
+    public void testKnownForResult() throws InterruptedException, ExecutionException 
+    {
+        assertDoesNotThrow(() -> service.getBio(TestsConsts.CODE).get());
+
+        GetBioResponse response = service.getBio(TestsConsts.CODE).get();
+
+        assertNotNull(response);
+        assertNotEquals(new GetBioResponse(), response);
     }
     
 
