@@ -100,6 +100,7 @@ public class KnownForService {
     }
 
     private HttpRequest getKnownForRequest(String code) {
+        log.info("Getting request to: "+ config.getUrl());
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(config.getUrl() + "/actors/get-known-for?nconst=" + code))
                 .header("x-rapidapi-host", config.getHost())
