@@ -62,10 +62,10 @@ public class BirthdayMatchBO {
         }
     }
 
-    // This methot has the public access modifier only to allow the @Async
+    // This methot only has the default access modifier to allow the @Async
     // annotattion to work
     @Async
-    public void addActorInfo(BirthdayMatchResponse response, String code) {
+    void addActorInfo(BirthdayMatchResponse response, String code) {
 
         GetBioResponse bio;
         List<KnownForResponse> knownFor;

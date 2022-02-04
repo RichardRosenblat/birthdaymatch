@@ -24,7 +24,7 @@ public class BirthdayMatchResource {
     @GetMapping("hello")
     public String hello(@RequestParam String name) {
         log.info("Request recieved, saying hello to {}", name);
-        return "Hello " + name;
+        return "Hello " + name + ", This api is working";
     }
 
     @GetMapping("match")
