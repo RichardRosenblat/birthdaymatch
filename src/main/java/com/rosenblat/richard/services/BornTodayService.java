@@ -52,6 +52,8 @@ public class BornTodayService {
     }
 
     private HttpRequest getBornTodayRequest(LocalDate date) {
+        log.info("Getting request to: "+ config.getUrl());
+        
         Integer day = date.getDayOfMonth();
         Integer month = date.getMonthValue();
 

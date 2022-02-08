@@ -70,6 +70,7 @@ public class GetBioService {
     }
 
     private HttpRequest getGetBioRequest(String code) {
+        log.info("Getting request to: "+ config.getUrl());
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(config.getUrl() + "/actors/get-bio?nconst=" + code))
                 .header("x-rapidapi-host", config.getHost())
